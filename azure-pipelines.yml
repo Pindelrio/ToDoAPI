@@ -13,3 +13,19 @@ steps:
     inputs:
       command: build
       arguments: '--configuration $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet test'
+    inputs:
+      command: test
+      projects: '**/*Test/*csproj'
+      arguments: '--configuration $(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet publish'
+    inputs:
+      command: publish
+      publishWebProjects: false
+      arguments: '--configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+  - task: PublishBuildArtifacts@1
+    displayName: 'upload artifacts'
+    inputs:
+      TargetPath: '$(Build.ArtifactStagingDirectory)'
